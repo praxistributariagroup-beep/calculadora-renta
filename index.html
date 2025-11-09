@@ -104,7 +104,7 @@
         <div class="input-group primary-field">
           <label for="gananciasEjercicio">GANANCIAS PROVENIENTES DEL EXTRANJERO (S/)</label>
           <div class="help-text">Colocamos el monto bruto consolidado de nuestras ganancias por fuente extranjera. Enero a diciembre del año a calcular.</div>
-          <div class="input-wrapper"><span class="currency-symbol">S/</span><input type="text" id="gananciasEjercicio" value="10,000.00" onblur="formatearInput(this)" oninput="calcularGananciaNeta()"></div>
+          <div class="input-wrapper"><span class="currency-symbol">S/</span><input type="text" id="gananciasEjercicio" value="0.00" onblur="formatearInput(this)" oninput="calcularGananciaNeta()"></div>
         </div>
         <div class="input-group primary-field">
           <label for="perdidasEjercicio">PÉRDIDAS PROVENIENTES DEL EXTRANJERO (S/)</label>
@@ -119,12 +119,12 @@
         <div class="input-group result-input primary-field hidden-field">
           <label for="gananciaNeta">GANANCIA NETA EXTRANJERA (S/)</label>
           <div class="help-text">Ganancia a la cual se aplica el 8 al 30 % por Impuesto a la Renta.</div>
-          <div class="input-wrapper"><span class="currency-symbol">S/</span><input type="text" id="gananciaNeta" value="10,000.00" readonly></div>
+          <div class="input-wrapper"><span class="currency-symbol">S/</span><input type="text" id="gananciaNeta" value="0.00" readonly></div>
         </div>
         <div class="input-group result-input final-field">
           <label for="baseImponibleTotal">GANANCIA SUJETA A IMPUESTO (S/)</label>
           <div class="help-text">Renta imponible trabajo + Ganancia neta extranjera.</div>
-          <div class="input-wrapper"><span class="currency-symbol">S/</span><input type="text" id="baseImponibleTotal" value="10,000.00" readonly></div>
+          <div class="input-wrapper"><span class="currency-symbol">S/</span><input type="text" id="baseImponibleTotal" value="0.00" readonly></div>
         </div>
       </div>
       <button class="btn-calculate" onclick="calcularImpuesto()">Calcular Impuesto</button>
@@ -147,7 +147,7 @@
         <div class="input-group primary-field">
           <label for="gananciasBVL">GANANCIAS PROVENIENTES DEL EXTRANJERO (S/)</label>
           <div class="help-text">Colocamos el monto bruto consolidado de nuestras ganancias por fuente extranjera. Enero a diciembre del año a calcular.</div>
-          <div class="input-wrapper"><span class="currency-symbol">S/</span><input type="text" id="gananciasBVL" value="10,000.00" onblur="formatearInput(this)" oninput="calcularGananciaBVL()"></div>
+          <div class="input-wrapper"><span class="currency-symbol">S/</span><input type="text" id="gananciasBVL" value="0.00" onblur="formatearInput(this)" oninput="calcularGananciaBVL()"></div>
         </div>
         <div class="input-group primary-field">
           <label for="perdidasBVL">PÉRDIDAS PROVENIENTES DEL EXTRANJERO (S/)</label>
@@ -162,7 +162,7 @@
         <div class="input-group result-input primary-field">
           <label for="gananciaNetaBVL">GANANCIA NETA EXTRANJERA (S/)</label>
           <div class="help-text">Ganancia a la cual se aplica el 6.25% por Impuesto a la Renta.</div>
-          <div class="input-wrapper"><span class="currency-symbol">S/</span><input type="text" id="gananciaNetaBVL" value="10,000.00" readonly></div>
+          <div class="input-wrapper"><span class="currency-symbol">S/</span><input type="text" id="gananciaNetaBVL" value="0.00" readonly></div>
         </div>
       </div>
       <button class="btn-calculate" onclick="calcularImpuestoBVL()">Calcular Impuesto</button>
