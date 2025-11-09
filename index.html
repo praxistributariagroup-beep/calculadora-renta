@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Calculadora Impuesto Renta Perú</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root{ --brand1:#667eea; --brand2:#764ba2; --ok:#059669; --ok-50:#ecfdf5; --ok-200:#a7f3d0; --ink:#1f2937; --surface:#f5f7fa; --surface2:#ecf0f6; }
+    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, var(--brand1) 0%, var(--brand2) 100%); min-height: 100vh; padding: 20px; display: flex; justify-content: center; align-items: center; color: var(--ink); }
+    .calculator-container { background: white; border-radius: 22px; box-shadow: 0 24px 60px rgba(0, 0, 0, 0.28); max-width: 720px; width: 100%; padding: 28px; border: 1px solid rgba(102,126,234,.12); }
+    h1 { color: var(--brand1); text-align: center; margin-bottom: 6px; font-size: 24px; }
+    .subtitle { text-align: center; color: #666; margin-bottom: 22px; font-size: 13px; }
+    .tabs { display: flex; gap: 10px; margin-bottom: 20px; }
+    .tab { flex: 1; padding: 12px; background: #f0f0f0; border: none; border-radius: 10px; font-size: 14px; font-weight: 700; cursor: pointer; transition: all 0.25s; color: #555; }
+    .tab.active { background: linear-gradient(135deg, var(--brand1) 0%, var(--brand2) 100%); color: white; }
+    .tab:hover { transform: translateY(-1px); }
+    .tab-content { display: none; animation: fadeIn 0.3s ease; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    .tab-content.active { display: block; }
+    .input-section { background: linear-gradient(135deg, var(--surface) 0%, var(--surface2) 100%); padding: 22px; border-radius: 16px; margin-bottom: 22px; }
+    .input-group { margin-bottom: 16px; background: #fff; border-radius: 14px; padding: 14px; border:1.5px solid #e5e7eb; transition: box-shadow .2s, border-color .2s; }
+    .input-group:hover{ box-shadow:0 6px 18px rgba(0,0,0,.06) }
+    .input-group:last-child { margin-bottom: 0; }
+    label { display: block; color: #333; font-weight: 700; margin-bottom: 8px; font-size: 14px; }
+    .help-text { font-size: 11px; color: #666; font-style: italic; margin-bottom: 8px; line-height: 1.4; }
+    .primary-field { background: linear-gradient(180deg, #eef2ff 0%, #e9edff 100%); border:2px solid #c7d2fe; }
+    .primary-field label { color:#3730a3; font-weight: 800; }
+    .primary-field .currency-symbol { color:#6366f1; }
+    .primary-field input { border-color:#c7d2fe; }
+    .final-field { background: linear-gradient(135deg, var(--ok-50), #eafff5); border:2px solid var(--ok-200); box-shadow: 0 10px 28px rgba(16,185,129,.22); }
+    .final-field label { color:#065f46; font-weight: 900; }
+    .final-field .currency-symbol { color:#047857; }
+    .final-field input { background:#f0fdf4; border-color: var(--ok-200); color:#065f46; font-weight: 900; font-size: 20px; }
+    .result-input input { background: #f7f8fb; font-weight: 800; color: #5b6eea; }
+    .input-wrapper { position: relative; display: flex; align-items: center; }
+    .currency-symbol { position: absolute; left: 15px; color: var(--brand1); font-weight: 800; font-size: 18px; }
+    input { width: 100%; padding: 12px 12px 12px 35px; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 18px; font-weight: 700; transition: border-color 0.2s, box-shadow .2s; }
+    input:focus { outline: none; border-color: var(--brand1); box-shadow: 0 0 0 3px rgba(102,126,234,.18) }
+    .btn-calculate { width: 100%; padding: 16px; background: linear-gradient(135deg, var(--brand1) 0%, var(--brand2) 100%); color: white; border: none; border-radius: 12px; font-size: 18px; font-weight: 800; cursor: pointer; transition: transform 0.18s, box-shadow 0.2s; margin-bottom: 20px; letter-spacing:.2px; }
+    .btn-calculate:hover { transform: translateY(-1px); box-shadow: 0 12px 28px rgba(102, 126, 234, 0.35); }
+    .btn-calculate:active { transform: translateY(0); }
+    .results { display: none; }
+    .results.show { display: block; animation: slideIn 0.4s ease; }
+    @keyframes slideIn { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+    table { width: 100%; border-collapse: collapse; margin-bottom: 16px; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1); }
+    th { background: linear-gradient(135deg, var(--brand1) 0%, var(--brand2) 100%); color: white; padding: 12px; text-align: left; font-size: 13px; font-weight: 800; letter-spacing:.2px }
+    td { padding: 12px; border-bottom: 1px solid #f0f0f0; font-size: 14px; }
+    tr:last-child td { border-bottom: none; }
+    tr:hover { background: #f8f9fa; }
+    .tramo-col { color: #555; font-weight: 600; }
+    .number-col { text-align: right; font-weight: 700; color: #333; }
+    .total-section { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 12px; }
+    .total-card { padding: 18px; border-radius: 16px; text-align: center; color:#fff; box-shadow:0 10px 22px rgba(0,0,0,.12) }
+    .total-impuesto { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
+    .total-neto { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
+    .total-label { font-size: 12px; opacity: 0.95; margin-bottom: 6px; font-weight: 700; letter-spacing:.3px }
+    .total-value { font-size: 28px; font-weight: 900; }
+    .reglas-box { margin-bottom: 16px; padding: 15px; background: #fff3cd; border-radius: 10px; border-left: 4px solid #ffc107; font-size: 11px; line-height: 1.7; }
+    .reglas-box strong { display: block; margin-bottom: 12px; font-size: 12px; }
+    .reglas-box p { margin-bottom: 10px; }
+    .reglas-box p:last-child { margin-bottom: 0; }
+    .hidden-field{ display:none !important; }
+    @media (max-width: 520px){ .calculator-container { padding: 20px; } h1 { font-size: 20px; } table { font-size: 12px; } th, td { padding: 9px; } .total-section { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <div class="calculator-container">
+    <h1>🇵🇪 Calculadora de Impuesto a la Renta</h1>
+    <p class="subtitle">Ganancias de Fuente Extranjera - Perú</p>
+    <div class="tabs">
+      <button class="tab active" onclick="cambiarTab('escalada')">Escala Progresiva 8%-30%</button>
+      <button class="tab" onclick="cambiarTab('bvl')">BVL - Tasa Fija 6.25%</button>
+    </div>
+    <div id="tab-escalada" class="tab-content active">
+      <div class="reglas-box">
+        <strong>(*) Reglas a considerar:</strong>
+        <p>El cálculo aplica para ganancias obtenidas en Buenbit, Hapi, Etoro, XTB, Interactive Brokers, Charles Schwab, Forex, CFDs, y otros ingresos del exterior.</p>
+        <p>Recuerda convertir cada una de tus ganancias y/o pérdidas al tipo de cambio compra a la fecha de percepción del ingreso según SBS.</p>
+        <p>Se considera las ganancias y pérdidas extranjeras del 1 al 31 de diciembre de cada año.</p>
+        <p>La calculadora incluye en la fórmula la deducción del 20% a rentas de 4ta categoría y deducción de 7 UIT a Rentas de 4ta y 5ta categoría.</p>
+      </div>
+      <div class="input-section">
+        <div class="input-group">
+          <label for="uit">UIT (S/)</label>
+          <div class="help-text">*Consignar la UIT del año que se va a declarar. Ejemplo: si voy a declarar el año 2025 coloco la UIT del 2025.</div>
+          <div class="input-wrapper"><span class="currency-symbol">S/</span><input type="text" id="uit" value="5,150.00" onblur="formatearInput(this)" oninput="calcularGananciaNeta()"></div>
+        </div>
+        <div class="input-group">
+          <label for="renta5ta">REMUNERACIONES DE 5TA CATEGORÍA (S/)</label>
+          <div class="help-text">Ingresos por trabajo dependiente (planilla).</div>
+          <div class="input-wrapper"><span class="currency-symbol">S/</span><input type="text" id="renta5ta" value="0.00" onblur="formatearInput(this)" oninput="calcularRentaTrabajo()"></div>
+        </div>
+        <div class="input-group">
+          <label for="renta4ta">REMUNERACIONES DE 4TA CATEGORÍA (S/)</label>
+          <div class="help-text">Ingresos por trabajo independiente (recibos por honorarios).</div>
+          <div class="input-wrapper"><span class="currency-symbol">S/</span><input type="text" id="renta4ta" value="0.00" onblur="formatearInput(this)" oninput="calcularRentaTrabajo()"></div>
+        </div>
+        <div class="input-group result-input hidden-field">
+          <label for="rentaImponibleTrabajo">RENTA IMPONIBLE TRABAJO (S/)</label>
+          <div class="help-text">Renta 4ta (menos 20%) + Renta 5ta - 7 UIT.</div>
+          <div class="input-wrapper"><span class="currency-symbol">S/</span><input type="text" id="rentaImponibleTrabajo" value="0.00" readonly></div>
+        </div>
+        <div class="input-group primary-field">
+          <label for="gananciasEjercicio">GANANCIAS PROVENIENTES DEL EXTRANJERO (S/)</label>
+          <div class="help-text">Colocamos el monto bruto consolidado de nuestras ganancias por fuente extranjera. Enero a diciembre del año a calcular.</div>
+          <div class="input-wrapper"><span class="currency-symbol">S/</span><input type="text" id="gananciasEjercicio" value="10,000.00" onblur="formatearInput(this)" oninput="calcularGananciaNeta()"></div>
+        </div>
+        <div class="input-group primary-field">
+          <label for="perdidasEjercicio">PÉRDIDAS PROVENIENTES DEL EXTRANJERO (S/)</label>
+          <div class="help-text">Colocamos el monto bruto consolidado de nuestras pérdidas por fuente extranjera. Enero a diciembre del año a calcular.</div>
+          <div class="input-wrapper"><span class="currency-symbol">S/</span><input type="text" id="perdidasEjercicio" value="0.00" onblur="formatearInput(this)" oninput="calcularGananciaNeta()"></div>
+        </div>
+        <div class="input-group primary-field">
+          <label for="comisiones">COMISIONES (S/)</label>
+          <div class="help-text">Comisiones de enero a diciembre del año a calcular.</div>
+          <div class="input-wrapper"><span class="currency-symbol">S/</span><input type="text" id="comisiones" value="0.00" onblur="formatearInput(this)" oninput="calcularGananciaNeta()"></div>
+        </div>
+        <div class="input-group result-input primary-field hidden-field">
+          <label for="gananciaNeta">GANANCIA NETA EXTRANJERA (S/)</label>
+          <div class="help-text">Ganancia a la cual se aplica el 8 al 30 % por Impuesto a la Renta.</div>
+          <div class="input-wrapper"><span class="currency-symbol">S/</span><input type="text" id="gananciaNeta" value="10,000.00" readonly></div>
+        </div>
+        <div class="input-group result-input final-field">
+          <label for="baseImponibleTotal">GANANCIA SUJETA A IMPUESTO (S/)</label>
+          <div class="help-text">Renta imponible trabajo + Ganancia neta extranjera.</div>
+          <div class="input-wrapper"><span class="currency-symbol">S/</span><input type="text" id="baseImponibleTotal" value="10,000.00" readonly></div>
+        </div>
+      </div>
+      <button class="btn-calculate" onclick="calcularImpuesto()">Calcular Impuesto</button>
+      <div class="results" id="results">
+        <table><thead><tr><th>Tramo</th><th>Límite superior (S/)</th><th>Porción en el tramo (S/)</th><th>Impuesto en el tramo (S/)</th></tr></thead><tbody id="resultTable"></tbody></table>
+        <div class="total-section">
+          <div class="total-card total-impuesto"><div class="total-label">IMPUESTO TOTAL</div><div class="total-value" id="impuestoTotal">S/ 0.00</div></div>
+          <div class="total-card total-neto"><div class="total-label">GANANCIA DESPUÉS DE IMPUESTO</div><div class="total-value" id="gananciaDespuesImpuesto">S/ 0.00</div></div>
+        </div>
+      </div>
+    </div>
+    <div id="tab-bvl" class="tab-content">
+      <div class="reglas-box">
+        <strong>(*) Reglas a considerar:</strong>
+        <p>El cálculo aplica para ganancias obtenidas por la venta de acciones extranjeras y ETFs tranzados a través de la BVL.</p>
+        <p>(*) Recuerda convertir cada una de tus ganancias y/o pérdidas al tipo de cambio compra a la fecha de percepción según SBS.</p>
+        <p>Se considera las ganancias y pérdidas extranjeras del 1 al 31 de diciembre de cada año.</p>
+      </div>
+      <div class="input-section">
+        <div class="input-group primary-field">
+          <label for="gananciasBVL">GANANCIAS PROVENIENTES DEL EXTRANJERO (S/)</label>
+          <div class="help-text">Colocamos el monto bruto consolidado de nuestras ganancias por fuente extranjera. Enero a diciembre del año a calcular.</div>
+          <div class="input-wrapper"><span class="currency-symbol">S/</span><input type="text" id="gananciasBVL" value="10,000.00" onblur="formatearInput(this)" oninput="calcularGananciaBVL()"></div>
+        </div>
+        <div class="input-group primary-field">
+          <label for="perdidasBVL">PÉRDIDAS PROVENIENTES DEL EXTRANJERO (S/)</label>
+          <div class="help-text">Colocamos el monto bruto consolidado de nuestras pérdidas por fuente extranjera. Enero a diciembre del año a calcular.</div>
+          <div class="input-wrapper"><span class="currency-symbol">S/</span><input type="text" id="perdidasBVL" value="0.00" onblur="formatearInput(this)" oninput="calcularGananciaBVL()"></div>
+        </div>
+        <div class="input-group primary-field">
+          <label for="comisionesBVL">COMISIONES (S/)</label>
+          <div class="help-text">Comisiones de enero a diciembre del año a calcular.</div>
+          <div class="input-wrapper"><span class="currency-symbol">S/</span><input type="text" id="comisionesBVL" value="0.00" onblur="formatearInput(this)" oninput="calcularGananciaBVL()"></div>
+        </div>
+        <div class="input-group result-input primary-field">
+          <label for="gananciaNetaBVL">GANANCIA NETA EXTRANJERA (S/)</label>
+          <div class="help-text">Ganancia a la cual se aplica el 6.25% por Impuesto a la Renta.</div>
+          <div class="input-wrapper"><span class="currency-symbol">S/</span><input type="text" id="gananciaNetaBVL" value="10,000.00" readonly></div>
+        </div>
+      </div>
+      <button class="btn-calculate" onclick="calcularImpuestoBVL()">Calcular Impuesto</button>
+      <div class="results" id="resultsBVL">
+        <div class="total-section">
+          <div class="total-card total-impuesto"><div class="total-label">IMPUESTO TOTAL (6.25%)</div><div class="total-value" id="impuestoTotalBVL">S/ 0.00</div></div>
+          <div class="total-card total-neto"><div class="total-label">GANANCIA DESPUÉS DE IMPUESTO</div><div class="total-value" id="gananciaDespuesImpuestoBVL">S/ 0.00</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    function formatearInput(e){let t=e.value.replace(/,/g,""),a=parseFloat(t);isNaN(a)&&(a=0),e.value=a.toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2})}function obtenerValorNumerico(e){return parseFloat(document.getElementById(e).value.replace(/,/g,""))||0}function establecerValorFormateado(e,t){document.getElementById(e).value=t.toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2})}function cambiarTab(e){document.querySelectorAll(".tab-content").forEach(e=>{e.classList.remove("active")});const t=document.querySelectorAll(".tab");t.forEach(e=>{e.classList.remove("active")}),"escalada"===e?(document.getElementById("tab-escalada").classList.add("active"),t[0].classList.add("active")):"bvl"===e&&(document.getElementById("tab-bvl").classList.add("active"),t[1].classList.add("active"))}function calcularGananciaNeta(){const e=obtenerValorNumerico("gananciasEjercicio"),t=obtenerValorNumerico("perdidasEjercicio"),a=obtenerValorNumerico("comisiones"),o=Math.max(0,e-t-a);establecerValorFormateado("gananciaNeta",o),calcularRentaTrabajo()}function calcularRentaTrabajo(){const e=obtenerValorNumerico("uit"),t=obtenerValorNumerico("renta5ta"),a=obtenerValorNumerico("renta4ta"),o=obtenerValorNumerico("gananciaNeta"),n=.8*a,r=Math.max(0,n+t-7*e),i=r+o;establecerValorFormateado("rentaImponibleTrabajo",r),establecerValorFormateado("baseImponibleTotal",i)}function calcularGananciaBVL(){const e=obtenerValorNumerico("gananciasBVL"),t=obtenerValorNumerico("perdidasBVL"),a=obtenerValorNumerico("comisionesBVL"),o=Math.max(0,e-t-a);establecerValorFormateado("gananciaNetaBVL",o)}function calcularImpuestoBVL(){const e=obtenerValorNumerico("gananciaNetaBVL");if(isNaN(e)||e<0)return void alert("Por favor verifica las ganancias, pérdidas y comisiones");const t=.0625*e,a=e-t;document.getElementById("impuestoTotalBVL").textContent="S/ "+formatNumber(t),document.getElementById("gananciaDespuesImpuestoBVL").textContent="S/ "+formatNumber(a),document.getElementById("resultsBVL").classList.add("show")}function calcularImpuesto(){const e=obtenerValorNumerico("uit"),t=obtenerValorNumerico("baseImponibleTotal");if(isNaN(e)||e<=0)return void alert("Por favor ingresa un valor válido para la UIT");if(isNaN(t)||t<0)return void alert("Por favor verifica los valores ingresados");const a=[{nombre:"Hasta 5 UIT (8%)",limite:5*e,tasa:.08},{nombre:"Más de 5 hasta 20 UIT (14%)",limite:20*e,tasa:.14},{nombre:"Más de 20 hasta 35 UIT (17%)",limite:35*e,tasa:.17},{nombre:"Más de 35 hasta 45 UIT (20%)",limite:45*e,tasa:.2},{nombre:"Exceso de 45 UIT (30%)",limite:1/0,tasa:.3}];let o=t,n=0,r=[],i=0;for(let e=0;e<a.length;e++){const t=a[e],l=t.limite-i;if(o>0){const e=Math.min(o,l),a=e*t.tasa;n+=a,o-=e,r.push({nombre:t.nombre,limite:t.limite===1/0?"∞":formatNumber(t.limite),porcion:formatNumber(e),impuesto:formatNumber(a)})}else r.push({nombre:t.nombre,limite:t.limite===1/0?"∞":formatNumber(t.limite),porcion:formatNumber(0),impuesto:formatNumber(0)});i=t.limite}const l=t-n;mostrarResultados(r,n,l)}function mostrarResultados(e,t,a){const o=document.getElementById("resultTable");o.innerHTML="",e.forEach(e=>{const t=document.createElement("tr");t.innerHTML=`<td class="tramo-col">${e.nombre}</td><td class="number-col">${e.limite}</td><td class="number-col">${e.porcion}</td><td class="number-col">${e.impuesto}</td>`,o.appendChild(t)}),document.getElementById("impuestoTotal").textContent="S/ "+formatNumber(t),document.getElementById("gananciaDespuesImpuesto").textContent="S/ "+formatNumber(a),document.getElementById("results").classList.add("show")}function formatNumber(e){return e.toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2})}window.onload=function(){calcularGananciaNeta(),calcularGananciaBVL(),calcularRentaTrabajo()};
+  </script>
+</body>
+</html>
